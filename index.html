@@ -115,9 +115,9 @@
         }
         
         .hero-title {
-            font-size: 4rem;
+            font-size: 3.5rem;
             font-weight: 700;
-            line-height: 1.1;
+            line-height: 1.26;
             margin-bottom: 1.5rem;
             color: var(--secondary);
         }
@@ -965,12 +965,10 @@ animateCursor();
         
         gsap.fromTo(titleChars, {
             opacity: 0,
-            y: 50,
-            rotationX: 90
+            x: 50
         }, {
             opacity: 1,
-            y: 0,
-            rotationX: 0,
+            x: 0,
             duration: 0.8,
             stagger: 0.05,
             ease: 'power3.out',
