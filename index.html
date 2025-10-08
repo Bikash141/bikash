@@ -434,12 +434,23 @@
                 display: none;
             }
         }
+        .custom-cursor {
+    width: 20px;
+    height: 20px;
+    background-color: #0022e1;
+    border-radius: 50%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease;
+    mix-blend-mode: exclusion;
+    pointer-events: none;
+    z-index: 1001;
+}
     </style>
 </head>
 <body>
     <!-- Custom Cursor -->
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
+    <div class="custom-cursor"> </div>
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -790,354 +801,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+       const cursor = document.querySelector(".custom-cursor");
 
-// Advanced Custom Cursor System
-class AdvancedCursor {
-    constructor() {
-        this.cursor = document.querySelector('.cursor');
-        this.cursorFollower = document.querySelector('.cursor-follower');
-        this.cursorText = document.querySelector('.cursor-text');
-        this.mouse = { x: 0, y: 0 };
-        this.follower = { x: 0, y: 0 };
-        this.speed = 0.15;
-        this.scale = 1;
-        this.init();
-    }
+let mouseX = 0;
+let mouseY = 0;
+let currentX = 0;
+let currentY = 0;
+const speed = 0.1; // smaller = slower trailing effect
 
-    init() {
-        // Mouse move event with throttling
-        this.throttledMouseMove = this.throttle(this.handleMouseMove.bind(this), 10);
-        document.addEventListener('mousemove', this.throttledMouseMove);
-        
-        // Hover effects for different elements
-        this.setupHoverEffects();
-        
-        // Click animation
-        document.addEventListener('mousedown', this.handleMouseDown.bind(this));
-        document.addEventListener('mouseup', this.handleMouseUp.bind(this));
-        
-        // Hide cursor when leaving window
-        document.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
-        document.addEventListener('mouseenter', this.handleMouseEnter.bind(this));
-        
-        // Animation loop
-        this.animate();
-    }
-
-    handleMouseMove(e) {
-        this.mouse.x = e.clientX;
-        this.mouse.y = e.clientY;
-        
-        // Parallax effect for cursor elements
-        gsap.to(this.cursor, {
-            x: this.mouse.x,
-            y: this.mouse.y,
-            duration: 0.1,
-            ease: "power2.out"
-        });
-    }
-
-    animate() {
-        // Calculate follower position with lag
-        this.follower.x += (this.mouse.x - this.follower.x) * this.speed;
-        this.follower.y += (this.mouse.y - this.follower.y) * this.speed;
-        
-        // Apply transform to follower
-        gsap.set(this.cursorFollower, {
-            x: this.follower.x,
-            y: this.follower.y,
-            scale: this.scale
-        });
-        
-        requestAnimationFrame(this.animate.bind(this));
-    }
-
-    setupHoverEffects() {
-        // Different hover effects for different elements
-        const hoverConfig = {
-            'a, button': { scale: 1.5, backgroundColor: '#6366f1', mixBlendMode: 'normal' },
-            '.project-card': { scale: 2, backgroundColor: '#06d6a0', mixBlendMode: 'normal' },
-            '.skill-card': { scale: 1.8, backgroundColor: '#f59e0b', mixBlendMode: 'normal' },
-            '.nav-link': { scale: 1.3, backgroundColor: '#8b5cf6', mixBlendMode: 'normal' },
-            '.social-link': { scale: 1.4, backgroundColor: '#ef4444', mixBlendMode: 'normal' }
-        };
-
-        Object.entries(hoverConfig).forEach(([selector, config]) => {
-            const elements = document.querySelectorAll(selector);
-            
-            elements.forEach(el => {
-                // Mouse enter
-                el.addEventListener('mouseenter', (e) => {
-                    this.animateCursor(config);
-                    this.updateCursorText(el.dataset.cursorText || '');
-                    
-                    // Magnetic effect for buttons
-                    if (selector.includes('button') || selector.includes('a')) {
-                        this.addMagneticEffect(el);
-                    }
-                });
-                
-                // Mouse leave
-                el.addEventListener('mouseleave', () => {
-                    this.resetCursor();
-                    this.updateCursorText('');
-                    
-                    // Remove magnetic effect
-                    if (selector.includes('button') || selector.includes('a')) {
-                        this.removeMagneticEffect(el);
-                    }
-                });
-            });
-        });
-    }
-
-    animateCursor(config) {
-        gsap.to(this.cursor, {
-            scale: config.scale * 0.5,
-            backgroundColor: config.backgroundColor,
-            mixBlendMode: config.mixBlendMode,
-            duration: 0.3,
-            ease: "back.out(1.7)"
-        });
-
-        gsap.to(this.cursorFollower, {
-            scale: config.scale,
-            backgroundColor: config.backgroundColor,
-            mixBlendMode: config.mixBlendMode,
-            duration: 0.4,
-            ease: "back.out(1.7)"
-        });
-    }
-
-    resetCursor() {
-        gsap.to([this.cursor, this.cursorFollower], {
-            scale: 1,
-            backgroundColor: 'transparent',
-            mixBlendMode: 'difference',
-            duration: 0.3,
-            ease: "power2.out"
-        });
-    }
-
-    updateCursorText(text) {
-        if (!this.cursorText) return;
-        
-        if (text) {
-            this.cursorText.textContent = text;
-            gsap.to(this.cursorText, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        } else {
-            gsap.to(this.cursorText, {
-                opacity: 0,
-                scale: 0.5,
-                duration: 0.2,
-                ease: "power2.out"
-            });
-        }
-    }
-
-    addMagneticEffect(element) {
-        element.addEventListener('mousemove', this.handleMagneticMove.bind(this, element));
-    }
-
-    removeMagneticEffect(element) {
-        element.removeEventListener('mousemove', this.handleMagneticMove.bind(this, element));
-        gsap.to(element, {
-            x: 0,
-            y: 0,
-            duration: 0.5,
-            ease: "elastic.out(1, 0.5)"
-        });
-    }
-
-    handleMagneticMove(element, e) {
-        const rect = element.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        const distanceX = e.clientX - centerX;
-        const distanceY = e.clientY - centerY;
-        
-        const strength = 0.2;
-        const maxDistance = 30;
-        
-        const moveX = gsap.utils.clamp(-maxDistance, maxDistance, distanceX * strength);
-        const moveY = gsap.utils.clamp(-maxDistance, maxDistance, distanceY * strength);
-        
-        gsap.to(element, {
-            x: moveX,
-            y: moveY,
-            duration: 0.5,
-            ease: "power2.out"
-        });
-    }
-
-    handleMouseDown() {
-        gsap.to([this.cursor, this.cursorFollower], {
-            scale: 0.8,
-            duration: 0.1,
-            ease: "power2.out"
-        });
-        
-        // Ripple effect
-        this.createRippleEffect();
-    }
-
-    handleMouseUp() {
-        gsap.to([this.cursor, this.cursorFollower], {
-            scale: this.scale,
-            duration: 0.3,
-            ease: "elastic.out(1, 0.5)"
-        });
-    }
-
-    handleMouseLeave() {
-        gsap.to([this.cursor, this.cursorFollower], {
-            opacity: 0,
-            duration: 0.3,
-            ease: "power2.out"
-        });
-    }
-
-    handleMouseEnter() {
-        gsap.to([this.cursor, this.cursorFollower], {
-            opacity: 1,
-            duration: 0.3,
-            ease: "power2.out"
-        });
-    }
-
-    createRippleEffect() {
-        const ripple = document.createElement('div');
-        ripple.className = 'cursor-ripple';
-        document.body.appendChild(ripple);
-        
-        gsap.set(ripple, {
-            x: this.mouse.x,
-            y: this.mouse.y,
-            scale: 0,
-            opacity: 1,
-            backgroundColor: 'rgba(99, 102, 241, 0.5)'
-        });
-        
-        gsap.to(ripple, {
-            scale: 2,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            onComplete: () => {
-                document.body.removeChild(ripple);
-            }
-        });
-    }
-
-    throttle(func, limit) {
-        let inThrottle;
-        return function(...args) {
-            if (!inThrottle) {
-                func.apply(this, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        }
-    }
-
-    // Public method to update cursor text dynamically
-    setCursorText(text) {
-        this.updateCursorText(text);
-    }
-
-    // Public method to change cursor style
-    setCursorStyle(style) {
-        const config = {
-            pointer: { scale: 1.5, backgroundColor: '#6366f1' },
-            zoom: { scale: 2, backgroundColor: '#06d6a0' },
-            drag: { scale: 1.8, backgroundColor: '#f59e0b' }
-        };
-        
-        if (config[style]) {
-            this.animateCursor(config[style]);
-        }
-    }
-}
-
-// Initialize advanced cursor
-const advancedCursor = new AdvancedCursor();
-
-// Add cursor text element if it doesn't exist
-if (!document.querySelector('.cursor-text')) {
-    const cursorText = document.createElement('div');
-    cursorText.className = 'cursor-text';
-    document.querySelector('.cursor').appendChild(cursorText);
-}
-
-// Add CSS for new elements
-const style = document.createElement('style');
-style.textContent = `
-    .cursor-ripple {
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9997;
-    }
-    
-    .cursor-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 12px;
-        font-weight: 600;
-        color: white;
-        opacity: 0;
-        pointer-events: none;
-        white-space: nowrap;
-    }
-    
-    /* Enhanced cursor styles */
-    .cursor {
-        width: 8px;
-        height: 8px;
-        transition: background-color 0.3s ease;
-    }
-    
-    .cursor-follower {
-        width: 40px;
-        height: 40px;
-        border: 2px solid #6366f1;
-        transition: border-color 0.3s ease;
-    }
-    
-    /* Hide default cursor */
-    body {
-        cursor: none !important;
-    }
-    
-    /* Show default cursor for touch devices */
-    @media (hover: none) and (pointer: coarse) {
-        body { cursor: auto !important; }
-        .cursor, .cursor-follower { display: none !important; }
-    }
-`;
-document.head.appendChild(style);
-
-// Add data attributes for cursor text
-document.querySelectorAll('a, button, .project-card').forEach(el => {
-    if (el.tagName === 'A') {
-        el.dataset.cursorText = 'View';
-    } else if (el.tagName === 'BUTTON') {
-        el.dataset.cursorText = 'Click';
-    } else if (el.classList.contains('project-card')) {
-        el.dataset.cursorText = 'Explore';
-    }
+document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
 });
+
+function animateCursor() {
+    currentX += (mouseX - currentX) * speed;
+    currentY += (mouseY - currentY) * speed;
+
+    cursor.style.left = currentX + "px";
+    cursor.style.top = currentY + "px";
+
+    requestAnimationFrame(animateCursor);
+}
+
+// Start the animation loop
+animateCursor();
         
         // Hover effect for links and buttons
         const hoverElements = document.querySelectorAll('a, button, .project-card, .skill-card');
