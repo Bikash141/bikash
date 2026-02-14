@@ -289,7 +289,6 @@
         }
       }
 
-      /* Ensure hero buttons are visible on light background */
       .hero .btn-magnetic {
         border: 1px solid rgba(0, 0, 0, 0.1);
         color: var(--text-dark);
@@ -303,6 +302,34 @@
 
       .hero .btn-magnetic:hover {
         color: white !important;
+      }
+
+      .logo-item {
+        background: white;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        border: 1px solid #e4e4e7;
+        position: relative;
+        transition: border-color 0.3s ease;
+      }
+
+      .logo-item:hover {
+        border-color: var(--accent);
+      }
+
+      .logo-item img {
+        transition:
+          filter 0.3s ease,
+          transform 0.3s ease;
+        filter: grayscale(1);
+      }
+
+      .logo-item:hover img {
+        filter: grayscale(0);
+        transform: scale(1.1);
       }
     </style>
   </head>
@@ -400,6 +427,85 @@
             <p style="font-size: 0.8rem; color: var(--text-dim)">
               PostgreSQL, Kafka
             </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="tech-stack section-padding"
+      style="background: var(--bg-light); overflow: hidden"
+    >
+      <div class="grid">
+        <div>
+          <h2 style="font-size: 3rem; margin-bottom: 1rem">Tooling</h2>
+          <p style="color: var(--text-dim)">
+            The core technologies powering my architectural decisions.
+          </p>
+        </div>
+        <div
+          class="logo-grid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+          "
+        >
+          <div class="logo-item" data-name="Python">
+            <img
+              src="https://cdn.simpleicons.org/python/71717a"
+              width="40"
+              alt="Python"
+            />
+          </div>
+          <div class="logo-item" data-name="Rust">
+            <img
+              src="https://cdn.simpleicons.org/rust/71717a"
+              width="40"
+              alt="Rust"
+            />
+          </div>
+          <div class="logo-item" data-name="Go">
+            <img
+              src="https://cdn.simpleicons.org/go/71717a"
+              width="40"
+              alt="Go"
+            />
+          </div>
+          <div class="logo-item" data-name="PostgreSQL">
+            <img
+              src="https://cdn.simpleicons.org/postgresql/71717a"
+              width="40"
+              alt="Postgres"
+            />
+          </div>
+          <div class="logo-item" data-name="Kafka">
+            <img
+              src="https://cdn.simpleicons.org/apachekafka/71717a"
+              width="40"
+              alt="Kafka"
+            />
+          </div>
+          <div class="logo-item" data-name="Docker">
+            <img
+              src="https://cdn.simpleicons.org/docker/71717a"
+              width="40"
+              alt="Docker"
+            />
+          </div>
+          <div class="logo-item" data-name="Kubernetes">
+            <img
+              src="https://cdn.simpleicons.org/kubernetes/71717a"
+              width="40"
+              alt="K8s"
+            />
+          </div>
+          <div class="logo-item" data-name="AWS">
+            <img
+              src="https://cdn.simpleicons.org/amazonaws/71717a"
+              width="40"
+              alt="AWS"
+            />
           </div>
         </div>
       </div>
