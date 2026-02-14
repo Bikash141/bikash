@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systems Architect | Portfolio 2026</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --accent: #0066cc;
+            --bg-light: #ffffff;
+            --bg-gray: #f2f2f5;
+            --bg-dark: #09090b;
+            --text-dark: #121212;
+            --text-dim: #71717a;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Cursor --- */
+        .cursor-follower {
+            position: fixed;
+            width: 35px;
+            height: 35px;
+            border: 1.2px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .cursor-dot {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem;
+            z-index: 1000;
+            mix-blend-mode: difference;
+            color: white;
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* --- Hero --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            background: var(--bg-light);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+        }
+
+        /* --- Redesigned Work Scroll --- */
+        .work-wrapper {
+            background: var(--bg-dark);
+            position: relative;
+        }
+
+        .project-panel {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            /* ADD THIS LINE */
+            background: var(--bg-dark);
+        }
+
+        .bg-number {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30vw;
+            font-weight: 800;
+            font-family: 'JetBrains Mono';
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .project-content {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 5vw;
+            align-items: center;
+            width: 85%;
+            max-width: 1400px;
+            z-index: 2;
+        }
+
+        .project-image-container {
+            width: 100%;
+            aspect-ratio: 16/10;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        .project-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-info {
+            transform: translateY(30px);
+            opacity: 0;
+            color: white;
+        }
+
+        .project-info h3 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            margin: 0.5rem 0 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .project-info p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 450px;
+            margin-bottom: 2.5rem;
+        }
+
+        .tag {
+            font-family: 'JetBrains Mono';
+            color: var(--accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        /* --- Redesigned Buttons --- */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-magnetic {
+            padding: 1rem 2.2rem;
+            border-radius: 100px;
+            font-family: 'JetBrains Mono';
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-magnetic.solid {
+            background: white;
+            color: black;
+            border: none;
+        }
+
+        .btn-magnetic:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* --- Profile & Contact --- */
+        .section-padding {
+            padding: 10rem 0;
+            background: var(--bg-light);
+            position: relative;
+            z-index: 3;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid #e4e4e7;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 0;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            color: #71717a;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+
+        .form-group input:focus~label,
+        .form-group input:not(:placeholder-shown)~label {
+            transform: translateY(-1.5rem);
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        @media (max-width: 900px) {
+
+            .project-content,
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bg-number {
+                display: none;
+            }
+
+            .cursor-follower,
+            .cursor-dot {
+                display: none;
+            }
+
+            * {
+                cursor: auto;
+            }
+        }
+
+        /* Ensure hero buttons are visible on light background */
+        .hero .btn-magnetic {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+        }
+
+        .hero .btn-magnetic.solid {
+            background: var(--text-dark);
+            color: white !important;
+            border: none;
+        }
+
+        .hero .btn-magnetic:hover {
+            color: white !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor-follower"></div>
+    <div class="cursor-dot"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <div style="font-weight: 700; font-size: 1.1rem;">B.PRASAD</div>
+            <div style="display:flex; gap: 2.5rem; font-family: 'JetBrains Mono'; font-size: 0.75rem;">
+                <a href="#work" style="color:inherit; text-decoration:none;">PROJECTS</a>
+                <a href="profile.html" style="color:inherit; text-decoration:none;">PROFILE</a>
+                <a href="#contact" style="color:inherit; text-decoration:none;">CONTACT</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div>
+            <h1>CRAFTING<br>HIGH-PERFORMANCE<br><span style="color:var(--accent)">LOGIC.</span></h1>
+            <p style="margin-top:2rem; max-width:550px; font-size:1.2rem; color:var(--text-dim);">
+                Engineering 2026-grade backends and surgically precise frontends.
+            </p>
+
+            <div class="btn-group" style="margin-top: 3rem;">
+                <a href="#contact" class="btn-magnetic solid" style="color: rgb(255, 255, 255) !important;">Get In
+                    Touch</a>
+                <a href="/resume.pdf" class="btn-magnetic" target="_blank">View Resume</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="work-wrapper" id="work">
+    </main>
+
+    <section id="about" class="section-padding" style="background:var(--bg-gray)">
+        <div class="grid">
+            <div>
+                <h2 style="font-size: 3rem; margin-bottom: 2rem;">Philosophy</h2>
+                <p style="color:var(--text-dim); line-height: 1.8; font-size: 1.1rem;">I architect systems that scale
+                    without friction. From NLP engines in Python to low-latency Rust gateways, my focus is on invisible,
+                    robust logic.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="background:white; padding: 2.5rem; border-radius: 12px;">
+                    <h4>Backend</h4>
+                    <p style="font-size:0.8rem; color:var(--text-dim)">Python, Rust, Go</p>
+                </div>
+                <div style="background:white; padding: 2.5rem; border-radius: 12px;">
+                    <h4>Data</h4>
+                    <p style="font-size:0.8rem; color:var(--text-dim)">PostgreSQL, Kafka</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section-padding">
+        <div class="grid">
+            <div>
+                <h2 style="font-size: 4rem; line-height: 0.9;">Start a<br>Collaboration.</h2>
+                <p style="margin-top: 2rem; color: var(--text-dim);">Currently accepting high-impact architectural
+                    projects.</p>
+            </div>
+            <form>
+                <div class="form-group"><input type="text" placeholder=" " required><label>Full Name</label></div>
+                <div class="form-group"><input type="email" placeholder=" " required><label>Email Address</label></div>
+                <div class="form-group"><textarea placeholder=" " rows="4" required></textarea><label>Message</label>
+                </div>
+                <button type="submit" class="btn-magnetic solid"
+                    style="width: 100%; justify-content: center; cursor: none;">Send Inquiry</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // 1. PROJECT DATA (10 TOTAL)
+        const projects = [
+            {id: "01",title: "BILLTRACK",cat: "Laravel/Node.js/MySQL",desc: "Rust-based gateway handling 25M requests/day with sub-12ms latency.",img: "./img/billtrack.png",link: "https://billtrack.co.in"},
+            { id: "02", title: "ADHISTHANA-UROGACARE", cat: "DEVOPS", desc: "Advanced deployment pipeline reducing build cycles for large-scale microservices.", img: "./img/adi.png", link: "https://adhisthanaurogynaecare.in/" },
+            { id: "03", title: "PATHWAY EDUCATION TRUST", cat: "INTERFACE", desc: "Low-latency dashboard component library designed for complex visualization.", img: "./img/pathway.png", link: "https://www.pathwayeducationtrust.in/" },
+            { id: "04", title: "JK-TRAVELS", cat: "STREAM / GO", desc: "Go consumer group processing 8TB daily. Exactly-once semantics implementation.", img: "./img/jk.png", link: "https://www.jktravelsindia.com/" },
+            { id: "05", title: "IISER-KOL", cat: "AWS / INFRA", desc: "Global failover architecture across 5 regions with automated traffic shifting.", img: "./img/iiser.png", link: "https://www.iiserkol.ac.in/web/" },
+            { id: "06", title: "PROMOTE EDUCATION", cat: "PYTHON / AI", desc: "Django-based NLP engine for real-time semantic analysis and sentiment scoring.", img: "./img/promote.png", link: "https://promoteducation.com/" },
+            { id: "07", title: "KEN-ACADEMY", cat: "FINTECH", desc: "Secure financial ledger with zero-knowledge proof authentication layers.", img: "./img/ken.png", link: "https://ken-academy.com" },
+            { id: "08", title: "ALETHIA-DIAGONASTICS", cat: "CLOUD / K8S", desc: "Kubernetes operator for automated scaling of GPU-intensive ML workloads.", img: "./img/alethia.png", link: "https://alethiadiagnostics.com/" },
+            { id: "09", title: "PICEEDUCARE", cat: "DATABASE", desc: "Time-series database optimization for massive IoT sensor telemetry datasets.", img: "./img/pice.png", link: "https://www.piceeducare.com/" },
+            { id: "10", title: "SUVIDACARE", cat: "SECURITY", desc: "eBPF-powered packet inspection engine for deep network observability.", img: "./img/suvidacare.png", link: "https://suvidacare.com/" },
+        ];
+
+        const workWrapper = document.getElementById('work');
+        projects.forEach(p => {
+            workWrapper.insertAdjacentHTML('beforeend', `
+                <div class="project-panel">
+                    <div class="bg-number">${p.id}</div>
+                    <div class="project-content">
+                        <div class="project-image-container">
+                            <img src="${p.img}" alt="${p.title}">
+                        </div>
+                        <div class="project-info">
+                            <span class="tag">${p.cat}</span>
+                            <h3>${p.title}</h3>
+                            <p>${p.desc}</p>
+                            <div class="btn-group">
+                                <a href="#" class="btn-magnetic solid">Github</a>
+                                <a href="casestudy.html?id=${p.id}" class="btn-magnetic">Case Study</a>
+                                ${p.link ? `
+<a href="${p.link}" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   class="btn-magnetic">
+   Live
+   <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" style="margin-left: 8px;">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <line x1="10" y1="14" x2="21" y2="3"></line>
+   </svg>
+</a>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+
+        // 2. ANIMATION (LENIS + GSAP)
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        const follower = document.querySelector('.cursor-follower');
+        const dot = document.querySelector('.cursor-dot');
+        window.addEventListener('mousemove', e => {
+            gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(follower, { x: e.clientX - 17.5, y: e.clientY - 17.5, duration: 0.15 });
+        });
+        // Add this to your existing mousemove listener
+        document.querySelectorAll('.btn-magnetic').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+
+                gsap.to(btn, {
+                    x: x * 0.3,
+                    y: y * 0.3,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+            });
+        });
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Individual project animations as they enter view
+        gsap.utils.toArray('.project-panel').forEach((panel, i) => {
+            const img = panel.querySelector('.project-image-container');
+            const info = panel.querySelector('.project-info');
+
+            gsap.to([img, info], {
+                y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out",
+                scrollTrigger: {
+                    trigger: panel,
+                    start: "top 60%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+        });
+
+        // Cursor theme switch
+        // Add this to your gsap.utils.toArray loop to dim the previous card
+        ScrollTrigger.create({
+            trigger: panel,
+            start: "top top",
+            onLeave: () => gsap.to(panel, { opacity: 0.5, scale: 0.95, duration: 0.5 }),
+            onEnterBack: () => gsap.to(panel, { opacity: 1, scale: 1, duration: 0.5 })
+        });
+
+        // Hero Fade-in Animation
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline({ defaults: { ease: "power4.out", duration: 1.2 } });
+
+            tl.from(".hero h1", { y: 60, opacity: 0, delay: 0.2 })
+                .from(".hero p", { y: 30, opacity: 0 }, "-=0.8")
+                .from(".hero .btn-group", { y: 20, opacity: 0 }, "-=0.8");
+        });
+    </script>
+    
+</body>
+
+</html>
