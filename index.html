@@ -548,7 +548,6 @@
     </section>
 
     <script>
-      // 1. PROJECT DATA (10 TOTAL)
       const projects = [
         {
           id: "01",
@@ -675,7 +674,6 @@
         );
       });
 
-      // 2. ANIMATION (LENIS + GSAP)
       const lenis = new Lenis();
       function raf(time) {
         lenis.raf(time);
@@ -693,7 +691,6 @@
           duration: 0.15,
         });
       });
-      // Add this to your existing mousemove listener
       document.querySelectorAll(".btn-magnetic").forEach((btn) => {
         btn.addEventListener("mousemove", (e) => {
           const rect = btn.getBoundingClientRect();
@@ -719,7 +716,6 @@
       });
       gsap.registerPlugin(ScrollTrigger);
 
-      // Individual project animations as they enter view
       gsap.utils.toArray(".project-panel").forEach((panel, i) => {
         const img = panel.querySelector(".project-image-container");
         const info = panel.querySelector(".project-info");
@@ -738,8 +734,6 @@
         });
       });
 
-      // Cursor theme switch
-      // Add this to your gsap.utils.toArray loop to dim the previous card
       ScrollTrigger.create({
         trigger: panel,
         start: "top top",
@@ -749,7 +743,6 @@
           gsap.to(panel, { opacity: 1, scale: 1, duration: 0.5 }),
       });
 
-      // Hero Fade-in Animation
       window.addEventListener("load", () => {
         const tl = gsap.timeline({
           defaults: { ease: "power4.out", duration: 1.2 },
